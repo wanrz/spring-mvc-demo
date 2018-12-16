@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd"
+	default-init-method="init" default-destroy-method="destroy">
+
+	<context:annotation-config />
+
+	<!-- IOC -->
+	<bean id="helloWorld" class="com.spring.demo.HelloWorld.HelloWorld">
+		<property name="message" value="Hello World!" />
+	</bean>
+
+	<bean id="scopeWorld" class="com.spring.demo.Bean.scope.ScopeWorld"
+		scope="prototype">
+	</bean>
+
+	<bean id="exampleBean" class="com.spring.demo.Bean.LifeCycle.ExampleBean"
+		init-method="init" destroy-method="destroy">
+		<property name="message" value="Hello LifeCycle!" />
+	</bean>
+
+	<bean id="helloIndia" class="com.spring.demo.Bean.extend.HelloIndia"
+		parent="helloWorld">
+		<property name="message1" value="Hello India!" />
+		<property name="message2" value="Namaste India!" />
+	</bean>
+
+	<!-- DI -->
+	<bean id="spellChecker" class="com.spring.demo.DI.ConstructorInjection.SpellChecker">
+	</bean>
+
+	<bean id="textEditor" class="com.spring.demo.DI.ConstructorInjection.TextEditor">
+		<constructor-arg ref="spellChecker" />
+		<property name="foo" ref="foo" />
+	</bean>
+
+	<bean id="foo" class="com.spring.demo.DI.ConstructorInjection.Foo">
+		<constructor-arg index="0" value="2018" />
+		<constructor-arg index="1" value="张三Zara" />
+	</bean>
+
+	<bean id="fileEditor" class="com.spring.demo.DI.innerbeans.FileEditor">
+		<property name="fileChecker">
+			<bean id="fileChecker" class="com.spring.demo.DI.innerbeans.FileChecker" />
+		</property>
+	</bean>
+
+	<!-- Definition for javaCollection -->
+	<bean id="javaCollection" class="com.spring.demo.DI.collection.JavaCollection">
+		<!-- results in a setAddressList(java.util.List) call -->
+		<property name="addressList">
+			<list>
+				<value>INDIA</value>
+				<value>Pakistan</value>
+				<value>USA</value>
+				<value>USA</value>
+			</list>
+		</property>
+		<!-- results in a setAddressSet(java.util.Set) call -->
+		<property name="addressSet">
+			<set>
+				<value>INDIA</value>
+				<value>Pakistan</value>
+				<value>USA</value>
+				<value>USA</value>
+			</set>
+		</property>
+		<!-- results in a setAddressMap(java.util.Map) call -->
+		<property name="addressMap">
+			<map>
+				<entry key="1" value="INDIA" />
+				<entry key="2" value="Pakistan" />
+				<entry key="3" value="USA" />
+				<entry key="4" value="USA" />
+			</map>
+		</property>
+		<!-- results in a setAddressProp(java.util.Properties) call -->
+		<property name="addressProp">
+			<props>
+				<prop key="one">INDIA</prop>
+				<prop key="two">Pakistan</prop>
+				<prop key="three">USA</prop>
+				<prop key="four">USA</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- Annotation -->
+	<bean id="student" class="com.spring.demo.Annotation.Required.Student">
+		<property name="name" value="Zara" />
+		<property name="age" value="11" />
+	</bean>
+
+	<bean id="student1" class="com.spring.demo.Annotation.Required.Student">
+		<property name="name" value="Zara" />
+		<property name="age" value="11" />
+	</bean>
+
+	<bean id="student2" class="com.spring.demo.Annotation.Required.Student">
+		<property name="name" value="Nuha" />
+		<property name="age" value="2" />
+	</bean>
+
+	<bean id="teacher" class="com.spring.demo.Annotation.Autowired.Teacher">
+	</bean>
+
+	<bean id="profile" class="com.spring.demo.Annotation.Qualifier.Profile">
+	</bean>
+
+	<bean id="cStartEventHandler" class="com.spring.demo.Annotation.Event.CStartEventHandler" />
+	<bean id="cStopEventHandler" class="com.spring.demo.Annotation.Event.CStopEventHandler" />
+	<bean id="cClosedEventHandler" class="com.spring.demo.Annotation.Event.CClosedEventHandler" />
+	<bean id="cRefreshedEventHandle" class="com.spring.demo.Annotation.Event.CRefreshedEventHandler" />
+	<bean id="cRequestHandledEventHandler"
+		class="com.spring.demo.Annotation.Event.CRequestHandledEventHandler" />
+
+	<!-- JDBC -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/db_maven" />
+		<property name="username" value="root" />
+		<property name="password" value="oursql" />
+	</bean>
+
+	<bean id="studentJDBCTemplate" class="com.spring.demo.JDBC.StudentJDBCTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- AOP -->
+	<bean id="logging" class="com.spring.demo.AOP.XML.Logging" />
+
+	<aop:config>
+		<aop:aspect id="log" ref="logging">
+			<aop:pointcut id="aopPointcut"
+				expression="execution(* com.spring.demo.Annotation.Required.*.*(..))" />
+			<aop:before pointcut-ref="aopPointcut" method="beforeAdvice" />
+			<aop:after pointcut-ref="aopPointcut" method="afterAdvice" />
+			<aop:after-returning pointcut-ref="aopPointcut"
+				returning="retVal" method="afterReturningAdvice" />
+			<aop:after-throwing pointcut-ref="aopPointcut"
+				throwing="ex" method="AfterThrowingAdvice" />
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 事物transaction -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="create" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<aop:pointcut id="jdbcOperation"
+			expression="execution(* com.spring.demo.JDBC.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="jdbcOperation" />
+	</aop:config>
+
+	<!-- Definition for logging aspect -->
+	<bean id="aspectJLogging" class="com.spring.demo.AOP.AspectJ.AspectJLogging" />
+
+	<!-- <bean class="com.spring.demo.Bean.after.InitHelloWorld" /> -->
+</beans>
