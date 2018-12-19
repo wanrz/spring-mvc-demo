@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class WebController {
    @RequestMapping(value = "/index", method = RequestMethod.GET)
    public String index() {
-       return "index";
+       return "jsp/index";
    }   
    @RequestMapping(value = "/redirect", method = RequestMethod.GET)
    public String redirect() {     
-      return "redirect:finalPage";
+      return "redirect:/finalPage";
    }   
    @RequestMapping(value = "/finalPage", method = RequestMethod.GET)
    public String finalPage() {     
-      return "final";
+      return "jsp/final";
    }
    
    @RequestMapping(value = "/staticPage", method = RequestMethod.GET)

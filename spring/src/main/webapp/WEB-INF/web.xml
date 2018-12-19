@@ -6,8 +6,8 @@
 
    <display-name>spring</display-name>
    <welcome-file-list>
-      <welcome-file>index.jsp</welcome-file>
-   </welcome-file-list>
+		<welcome-file>mainTemp.jsp</welcome-file>
+	</welcome-file-list>
    
    <context-param>
    		<param-name>contextConfigLocation</param-name>
